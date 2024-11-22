@@ -151,4 +151,73 @@ class GildedRoseTest {
         assertEquals(4, items[0].sellIn);
         assertEquals(0, items[0].quality); // Quality cannot go below 0
     }
+
+    /**
+     * Backstage passes to a TAFKAL80ETC concert TESTS
+     */
+    @Test
+    void testBackstagePassesIncreaseByOneWhenMoreThanTenDaysLeft() {
+        Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20)};
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        assertEquals(14, items[0].sellIn);
+        assertEquals(21, items[0].quality); // Quality increases by 1
+    }
+
+    @Test
+    void testBackstagePassesIncreaseByTwoWhenTenDaysOrLessLeft() {
+        Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20)};
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        assertEquals(9, items[0].sellIn);
+        assertEquals(22, items[0].quality); // Quality increases by 2
+    }
+
+    @Test
+    void testBackstagePassesIncreaseByThreeWhenFiveDaysOrLessLeft() {
+        Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 5, 20)};
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        assertEquals(4, items[0].sellIn);
+        assertEquals(23, items[0].quality); // Quality increases by 3
+    }
+
+    @Test
+    void testBackstagePassesDropToZeroAfterConcert() {
+        Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 0, 20)};
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        assertEquals(-1, items[0].sellIn);
+        assertEquals(0, items[0].quality); // Quality drops to 0
+    }
+
+    @Test
+    void testBackstagePassesQualityNeverExceedsFifty() {
+        Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 10, 49)};
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        assertEquals(9, items[0].sellIn);
+        assertEquals(50, items[0].quality); // Max quality is 50
+    }
+
+    @Test
+    void testBackstagePassesQualityNeverExceedsFiftyWhenFiveDaysLeft() {
+        Item[] items = new Item[]{new Item("Backstage passes to a TAFKAL80ETC concert", 5, 48)};
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+
+        assertEquals(4, items[0].sellIn);
+        assertEquals(50, items[0].quality); // Max quality is 50
+    }
 }
